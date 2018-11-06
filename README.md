@@ -105,10 +105,14 @@ Requirements:
 * toRegistryImgUrl: The url of the destination docker repository where the image is going to be copied.
 * toRegistryCredentials: Username:password with permissions to pushing images.
 
-```skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:<fromRegistryCredentials> --dest-creds <toRegistryCredentials> docker://<fromRegistryImgUrl> docker://<toRegistryImgUrl>```
+```
+skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:<fromRegistryCredentials> --dest-creds <toRegistryCredentials> docker://<fromRegistryImgUrl> docker://<toRegistryImgUrl>
+```
 
 Example:
-```skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:\$(oc whoami -t) --dest-creds admin:admin123 docker://docker-registry.default.svc.cluster.local:5000/<devNamespace>/<app>:${devTag} docker://nexus-registry.nexus.svc.cluster.local:5000/<app>:${devTag}```
+```
+skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:\$(oc whoami -t) --dest-creds admin:admin123 docker://docker-registry.default.svc.cluster.local:5000/<devNamespace>/<app>:${devTag} docker://nexus-registry.nexus.svc.cluster.local:5000/<app>:${devTag}
+```
 
 ### Store Credentials in Jenkins
 
