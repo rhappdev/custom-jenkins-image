@@ -126,20 +126,20 @@ The input element pauses pipeline execution to wait for an approval - either aut
 So, create your inputs outside your nodes.
 Example:
 
-```stage ("deployment") {
+stage ("deployment") {
 input "Do you approve deployment?"
 	node("maven"){
    		// code
 	}
-}```
+}
 
 ### Do: Prefer stashing files to archiving
 
 If you just need to share files between stages and nodes of your pipeline, you should use stash/unstash instead of archive.
 Stash and unstash are designed for sharing files, for example your application’s source code, between stages and nodes. Archives, on the other hand, are designed for longer term file storage (e.g., intermediate binaries from your builds).
 
-```stash excludes: "target/", name: "source"
-unstash 'source'```
+stash excludes: "target/", name: "source"
+unstash "source"
 
 ### Copy the image
 
