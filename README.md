@@ -115,17 +115,17 @@ Example:
 To follow the best practises, don’t store the credentials in the Jenkinsfile, always try to retrieve the credentials from Jenkins.
 
 1. Create a username with password credential
-2. Username: openshift
-3. Password: <TOKEN>
-4. Id: <desiredCredentialId>
-5. Description: <desiredDescription>
+2. Username: ```openshift```
+3. Password: ```<TOKEN>```
+4. Id: ```<desiredCredentialId>```
+5. Description: ```<desiredDescription>```
 
 ### Copy the image
 
-´´´withCredentials([usernamePassword(credentialsId: 'prod-sa', passwordVariable: 'password', usernameVariable: 'username')]) {
+```withCredentials([usernamePassword(credentialsId: 'prod-sa', passwordVariable: 'password', usernameVariable: 'username')]) {
     skopeo copy --remove-signatures
  --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:\$(oc whoami -t) --dest-creds $username:$password docker://docker-registry.default.svc.cluster.local:5000/<namespaceSrc>/<app>:${desiredTag} docker://<toRegistryUrl>/<app>:${desiredTag}
-}´´´
+}```
 
 ### Don’t: Use input within a node block
 The input element pauses pipeline execution to wait for an approval - either automated or manual. Naturally these approvals could take some time. The node element, on the other hand, acquires and holds a lock on a workspace and heavy weight Jenkins executor - an expensive resource to hold onto while pausing for input.
