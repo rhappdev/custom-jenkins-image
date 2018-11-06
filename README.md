@@ -1,2 +1,4 @@
-# custom-jenkins-image
-Custom configuration used with Jenkins S2i
+# Custom Jenkins Image
+Create Custom Jenkins image using, Jenkins S2i Image
+
+## Architecture
