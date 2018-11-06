@@ -57,21 +57,21 @@ Openshift login plugin lets you login to Jenkins with your account on an OpenShi
 For the admin role, the Jenkins permissions are the same permissions as those assigned to an administrative user within Jenkins
 
 For the view role, the Jenkins permissions are:
-```hudson.model.Hudson.READ
+hudson.model.Hudson.READ,
 hudson.model.Item.READ
-com.cloudbees.plugins.credentials.CredentialsProvider.VIEW```
+com.cloudbees.plugins.credentials.CredentialsProvider.VIEW
 
 
 
 For the edit role, in addition to the permissions available to view:
-```hudson.model.Item.BUILD
+hudson.model.Item.BUILD
 hudson.model.Item.CONFIGURE
 hudson.model.Item.CREATE
 hudson.model.Item.DELETE
 hudson.model.Item.CANCEL
 hudson.model.Item.WORKSPACE
 hudson.scm.SCM.TAG
-jenkins.model.Jenkins.RUN_SCRIPTS```
+jenkins.model.Jenkins.RUN_SCRIPTS
 
 
 > When this plugin manages authentication, the predefined admin user in the default Jenkins user database for the OpenShift Jenkins image is now ignored
@@ -82,5 +82,75 @@ jenkins.model.Jenkins.RUN_SCRIPTS```
 
 ### Shared Libraries
 To learn more about Shared Libraries, refer to this [Repo](https://github.com/rhappdev/shared-jenkins-pipelines/blob/master/sections/setup.md)
+
+### Integration tests
+
+To guarantee the maximum security over the deployments that we make over the platform, postman has been chosen as the “designer” of the tests collections and ```newman``` as executor of those test created in the collection. 
+
+The idea is that following the API First approach that we use in the App development center of excellence, define tests in postman based on the API definition or Swagger definition.
+
+Setup a configuration folder as defined in one of our templates:
+* [Node.js](https://github.com/rhappdev/nodejs-template/tree/master/configuration/postman)
+* [Springboot](https://github.com/rhappdev/springboot-template/tree/master/configuration/postman)
+
+### Blue/Green Deployments
+Blue-green deployment is a technique that reduces downtime and risk by running two identical production environments called Blue and Green.
+[Jenkins Pipeline](https://github.com/rhappdev/shared-jenkins-pipelines/blob/master/sections/setup.md) it's already prepared to allow a blue-green deployment.
+
+### Publish the images to an external registry (Nexus)
+If you want to copy the images from the internal registry to the external registry like nexus, skopeo allows you to do this operation without too much effort:
+Requirements:
+* fromRegistryImgUrl: The url of our openshift registry and the image with tag that we want to copy
+* fromRegistryCredentials: Openshift account with image-puller permissions
+* toRegistryImgUrl: The url of the destination docker repository where the image is going to be copied.
+* toRegistryCredentials: Username:password with permissions to pushing images.
+
+```skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:<fromRegistryCredentials> --dest-creds <toRegistryCredentials> docker://<fromRegistryImgUrl> docker://<toRegistryImgUrl>```
+
+Example:
+```skopeo copy --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:\$(oc whoami -t) --dest-creds admin:admin123 docker://docker-registry.default.svc.cluster.local:5000/<devNamespace>/<app>:${devTag} docker://nexus-registry.nexus.svc.cluster.local:5000/<app>:${devTag}```
+
+### Store Credentials in Jenkins
+
+To follow the best practises, don’t store the credentials in the Jenkinsfile, always try to retrieve the credentials from Jenkins.
+
+1. Create a username with password credential
+2. Username: openshift
+3. Password: <TOKEN>
+4. Id: <desiredCredentialId>
+5. Description: <desiredDescription>
+
+### Copy the image
+
+´´´withCredentials([usernamePassword(credentialsId: 'prod-sa', passwordVariable: 'password', usernameVariable: 'username')]) {
+    skopeo copy --remove-signatures
+ --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:\$(oc whoami -t) --dest-creds $username:$password docker://docker-registry.default.svc.cluster.local:5000/<namespaceSrc>/<app>:${desiredTag} docker://<toRegistryUrl>/<app>:${desiredTag}
+}´´´
+
+### Don’t: Use input within a node block
+The input element pauses pipeline execution to wait for an approval - either automated or manual. Naturally these approvals could take some time. The node element, on the other hand, acquires and holds a lock on a workspace and heavy weight Jenkins executor - an expensive resource to hold onto while pausing for input.
+
+So, create your inputs outside your nodes.
+Example:
+
+```stage ('deployment') {
+input 'Do you approve deployment?'
+	node(‘maven’){
+   		// code
+	}
+}```
+
+
+### Do: Prefer stashing files to archiving
+
+If you just need to share files between stages and nodes of your pipeline, you should use stash/unstash instead of archive.
+Stash and unstash are designed for sharing files, for example your application’s source code, between stages and nodes. Archives, on the other hand, are designed for longer term file storage (e.g., intermediate binaries from your builds).
+
+```stash excludes: 'target/', name: 'source'
+unstash 'source'```
+
+
+
+
 
 
