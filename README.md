@@ -50,3 +50,37 @@ If not type the following:
   * which events would you like to trigger this webhook?: Just the push event.
 5. Now if you push something to the repo a new build will be triggered.
 
+### Jenkins permissions
+Openshift login plugin lets you login to Jenkins with your account on an OpenShift installation using the flag OPENSHIFT_ENABLE_OAUTH when creating the app based on jenkins-persistent template (default to true).
+
+#### Role Mappings
+For the admin role, the Jenkins permissions are the same permissions as those assigned to an administrative user within Jenkins
+
+For the view role, the Jenkins permissions are:
+```hudson.model.Hudson.READ
+hudson.model.Item.READ
+com.cloudbees.plugins.credentials.CredentialsProvider.VIEW```
+
+
+
+For the edit role, in addition to the permissions available to view:
+```hudson.model.Item.BUILD
+hudson.model.Item.CONFIGURE
+hudson.model.Item.CREATE
+hudson.model.Item.DELETE
+hudson.model.Item.CANCEL
+hudson.model.Item.WORKSPACE
+hudson.scm.SCM.TAG
+jenkins.model.Jenkins.RUN_SCRIPTS```
+
+
+> When this plugin manages authentication, the predefined admin user in the default Jenkins user database for the OpenShift Jenkins image is now ignored
+
+> Permissions for users in Jenkins can be changed in OpenShift after those users are initially established in Jenkins. The OpenShift Login plugin polls the OpenShift API server for permissions and will update the permissions stored in Jenkins for each Jenkins user with the permissions retrieved from OpenShift. Technically speaking, you can change the permissions for a Jenkins user from the Jenkins UI as well, but those changes will be overwritten the next time the poll occurs.
+
+## Best practises
+
+### Shared Libraries
+To learn more about Shared Libraries, refer to this [Repo](https://github.com/rhappdev/shared-jenkins-pipelines/blob/master/sections/setup.md)
+
+
