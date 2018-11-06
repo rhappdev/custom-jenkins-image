@@ -8,13 +8,7 @@ Create Custom Jenkins image using, Jenkins S2i Image
 
 ### Configuration files
 [Jenkins S2i Image](https://github.com/openshift/jenkins) requires a folder structure:
-```configuration
-  |- secrets
-  |   |- hudson.util.Secret
-  |   |- master.key
-  |- credentials.xml (Credentials stored in Jenkins)
-  |- org.jenkinsci.plugins.pipeline.modeldefinition.config.GlobalConfig |  (Global configuration files plugin setup)
-  |- org.jenkinsci.plugins.workflow.libs.GlobalLibraries (Global shared    pipeline configuration)```
+![Tree structure](https://github.com/rhappdev/assets/blob/master/custom_jenkins_image/tree_structure.png)
 
 ### Create custom jenkins image
 1. Login into oc CLI: 
