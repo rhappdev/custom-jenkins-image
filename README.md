@@ -8,7 +8,7 @@ Create Custom Jenkins image using, Jenkins S2i Image
 
 ### Configuration files
 [Jenkins S2i Image](https://github.com/openshift/jenkins) requires a folder structure:
-- configuration
+configuration
   |- secrets
   |   |- hudson.util.Secret
   |   |- master.key
@@ -30,7 +30,7 @@ Create Custom Jenkins image using, Jenkins S2i Image
 6. Wait until the image is created.
 
 ### Create new jenkins app, using jenkins-persistent template
-1. Use jenkins-persistent template
+1. Use jenkins-persistent template:
 ```oc new-app jenkins-persistent -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:latest -p NAMESPACE=<projectName> -p MEMORY_LIMIT=4Gi -p VOLUME_CAPACITY=10Gi -n <namespace>```
 2. Wait until the new pod is running.
 3. Access the Jenkins URL and check if jenkins is configured with our initial configuration.
