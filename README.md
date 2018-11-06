@@ -21,11 +21,11 @@ configuration
 ``` oc login <host>```
 2. Add username
 3. Add password
-4. Create project if needed
+4. Create project if needed:
 ```oc new-project <projectName>```
-5. (Optional) if your repo is private, create a new secret.
+5. (Optional) if your repo is private, create a new secret:
 ```oc create secret generic git-secret --from-literal=username=<username> --from-literal=password=<password> -n <projectName>```
-5. Create the new build (if the repository is private add ```--source-secret=git-secret```)
+5. Create the new build (if the repository is private add ```--source-secret=git-secret```):
 ```oc new-build jenkins:2~https://github.com/rhappdev/custom-jenkins-image.git --name=custom-jenkins -e GIT_SSL_NO_VERIFY=true -e OVERRIDE_PV_CONFIG_WITH_IMAGE_CONFIG=true -e OVERRIDE_PV_PLUGINS_WITH_IMAGE_PLUGINS=true -n <projectName>```
 6. Wait until the image is created.
 
@@ -37,21 +37,21 @@ configuration
 
 ### Create web-hook for autobuild.
 If we need to change something in the configuration, this will trigger a new build, and automatically redeploy our jenkins app.
-1. Make sure that github webhook is enabled.
+1. Make sure that github webhook is enabled:
 ```oc describe bc/custom-jenkins -n <projectName>```
-2. Check if Webhook GitHub it's created.
+2. Check if Webhook GitHub it's created:
 ```Webhook GitHub:URL:	https://master.na39.openshift.opentlc.com:443/apis/build.openshift.io/v1/namespaces/misanche-jenkins/buildconfigs/custom-jenkins/webhooks/<secret>/github```
 If not type the following:
-  * Github : ```oc set triggers bc/custom-jenkins --from-github```
+  * Github: ```oc set triggers bc/custom-jenkins --from-github```
   * Bitbucket: ```oc set triggers bc/custom-jenkins --from-bitbucket```
   * Gitlab: ```oc set triggers bc/custom-jenkins --from-bitbucket```
-3. Get the Secret.
+3. Get the Secret:
 ```oc get bc/custom-jenkins -o json -n misanche-jenkins``` pickup the url and add it to the url in ```<secret>````
 ```https://master.na39.openshift.opentlc.com:443/apis/build.openshift.io/v1/namespaces/misanche-jenkins/buildconfigs/custom-jenkins/webhooks/<secret>/github```
 4. Go to Github -> <yourRepo> -> Settings -> Webhooks -> Add Webhook
-  * PayloadURL: https://master.na39.openshift.opentlc.com:443/apis/build.openshift.io/v1/namespaces/misanche-jenkins/buildconfigs/custom-jenkins/webhooks/<secret>/github
-  * Content type: application/json
-  * Secret: <secret>
+  * PayloadURL: ```https://master.na39.openshift.opentlc.com:443/apis/build.openshift.io/v1/namespaces/misanche-jenkins/buildconfigs/custom-jenkins/webhooks/<secret>/github```
+  * Content type: ```application/json```
+  * Secret: ```<secret>```
   * SSL verification: enabled if certificate is ok
   * which events would you like to trigger this webhook?: Just the push event.
 5. Now if you push something to the repo a new build will be triggered.
