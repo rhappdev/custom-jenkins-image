@@ -121,32 +121,39 @@ To follow the best practises, don’t store the credentials in the Jenkinsfile, 
 5. Description: ```<desiredDescription>```
 
 ### Don’t: Use input within a node block
+
 The input element pauses pipeline execution to wait for an approval - either automated or manual. Naturally these approvals could take some time. The node element, on the other hand, acquires and holds a lock on a workspace and heavy weight Jenkins executor - an expensive resource to hold onto while pausing for input.
 
 So, create your inputs outside your nodes.
 Example:
 
+```
 stage ("deployment") {
 input "Do you approve deployment?"
 	node("maven"){
    		// code
 	}
 }
+```
 
 ### Do: Prefer stashing files to archiving
 
 If you just need to share files between stages and nodes of your pipeline, you should use stash/unstash instead of archive.
 Stash and unstash are designed for sharing files, for example your application’s source code, between stages and nodes. Archives, on the other hand, are designed for longer term file storage (e.g., intermediate binaries from your builds).
 
+```
 stash excludes: "target/", name: "source"
 unstash "source"
+```
 
 ### Copy the image
 
+```
 withCredentials([usernamePassword(credentialsId: 'prod-sa', passwordVariable: 'password', usernameVariable: 'username')]) {
   skopeo copy --remove-signatures
  --src-tls-verify=false --dest-tls-verify=false --src-creds openshift:\$(oc whoami -t) --dest-creds $username:$password docker://docker-registry.default.svc.cluster.local:5000/<namespaceSrc>/<app>:${desiredTag} docker://<toRegistryUrl>/<app>:${desiredTag}
 }
+```
 
 
 
