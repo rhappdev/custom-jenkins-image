@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<org.jenkinsci.plugins.configfiles.GlobalConfigFiles plugin="config-file-provider@2.17">
+  <configs class="sorted-set">
+    <comparator class="org.jenkinsci.plugins.configfiles.GlobalConfigFiles$1"/>
+    <org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig>
+      <id>maven-settings</id>
+      <name>maven-settings</name>
+      <comment>maven-settings</comment>
+      <content>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;settings&gt;
+  &lt;mirrors&gt;
+    &lt;mirror&gt;
+      &lt;id&gt;Nexus&lt;/id&gt;
+      &lt;name&gt;Nexus Public Mirror&lt;/name&gt;
+      &lt;url&gt;http://nexus-dcawley-xpaas.apps.na311.openshift.opentlc.com/content/groups/public/&lt;/url&gt;
+      &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;
+    &lt;/mirror&gt;
+  &lt;/mirrors&gt;
+  &lt;servers&gt;
+    &lt;server&gt;
+      &lt;id&gt;nexus&lt;/id&gt;
+      &lt;username&gt;xxxx&lt;/username&gt;
+      &lt;password&gt;xxxx&lt;/password&gt;
+    &lt;/server&gt;
+    &lt;server&gt;
+      &lt;id&gt;nexus-snapshots&lt;/id&gt;
+      &lt;username&gt;xxxx&lt;/username&gt;
+      &lt;password&gt;xxxx&lt;/password&gt;
+    &lt;/server&gt;
+    &lt;server&gt;
+      &lt;id&gt;nexus-releases&lt;/id&gt;
+      &lt;username&gt;xxxx&lt;/username&gt;
+      &lt;password&gt;xxxx&lt;/password&gt;
+    &lt;/server&gt;
+  &lt;/servers&gt;
+&lt;/settings&gt;
+</content>
+      <providerId>org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig</providerId>
+      <serverCredentialMappings>
+        <org.jenkinsci.plugins.configfiles.maven.security.ServerCredentialMapping>
+          <serverId>nexus</serverId>
+          <credentialsId>nexus</credentialsId>
+        </org.jenkinsci.plugins.configfiles.maven.security.ServerCredentialMapping>
+        <org.jenkinsci.plugins.configfiles.maven.security.ServerCredentialMapping>
+          <serverId>nexus-snapshots</serverId>
+          <credentialsId>nexus</credentialsId>
+        </org.jenkinsci.plugins.configfiles.maven.security.ServerCredentialMapping>
+        <org.jenkinsci.plugins.configfiles.maven.security.ServerCredentialMapping>
+          <serverId>nexus-releases</serverId>
+          <credentialsId>nexus</credentialsId>
+        </org.jenkinsci.plugins.configfiles.maven.security.ServerCredentialMapping>
+      </serverCredentialMappings>
+      <isReplaceAll>true</isReplaceAll>
+    </org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig>
+  </configs>
+</org.jenkinsci.plugins.configfiles.GlobalConfigFiles>
