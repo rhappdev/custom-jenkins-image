@@ -25,7 +25,7 @@ Create Custom Jenkins image using, Jenkins S2i Image
 
 ### Create new jenkins app, using jenkins-persistent template
 1. Use jenkins-persistent template:
-```oc new-app jenkins-persistent -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:latest -p NAMESPACE=<projectName> -p MEMORY_LIMIT=4Gi -p VOLUME_CAPACITY=10Gi -n <namespace>```
+```oc new-app jenkins-persistent -p JENKINS_IMAGE_STREAM_TAG=custom-jenkins:latest -p NAMESPACE=<projectName> -p MEMORY_LIMIT=4Gi -p VOLUME_CAPACITY=10Gi -n <projectName>```
 2. Wait until the new pod is running.
 3. Access the Jenkins URL and check if jenkins is configured with our initial configuration.
 
