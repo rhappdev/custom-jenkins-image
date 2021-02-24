@@ -1,1 +1,1 @@
-mailer:1.20
+mailer:1.32.1
